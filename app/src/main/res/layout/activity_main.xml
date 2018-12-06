@@ -8,8 +8,8 @@
         tools:context=".MainActivity">
 
     <SeekBar
-            android:layout_width="167dp"
-            android:layout_height="34dp"
+            android:layout_width="180dp"
+            android:layout_height="44dp"
             android:id="@+id/speedSeekBar" app:layout_constraintStart_toStartOf="parent"
             android:max="20"
             android:layout_marginStart="60dp"
@@ -17,8 +17,8 @@
             app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.647"/>
     <SeekBar
-            android:layout_width="168dp"
-            android:layout_height="29dp"
+            android:layout_width="170dp"
+            android:layout_height="45dp"
             android:id="@+id/turnSeekBar"
             android:max="20"
             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
@@ -30,7 +30,7 @@
             android:text="Speed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView" android:layout_marginBottom="12dp"
+            android:id="@+id/speedTextView" android:layout_marginBottom="12dp"
             app:layout_constraintBottom_toTopOf="@+id/speedSeekBar"
             app:layout_constraintStart_toStartOf="@+id/speedSeekBar"
             android:layout_marginEnd="8dp" app:layout_constraintHorizontal_bias="0.0"
@@ -39,7 +39,7 @@
             android:text="Turn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView2" android:layout_marginBottom="16dp"
+            android:id="@+id/turnTextView" android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toTopOf="@+id/turnSeekBar" app:layout_constraintEnd_toEndOf="@+id/turnSeekBar"
             android:layout_marginEnd="128dp" app:layout_constraintStart_toStartOf="@+id/turnSeekBar"
     />
