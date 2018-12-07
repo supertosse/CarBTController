@@ -1,23 +1,27 @@
 package com.supertosse.carbtcontroller
 
-import android.content.Context
-import me.aflak.bluetooth.Bluetooth
+import java.io.InputStream
+import java.io.OutputStream
 
 
-
-class BluetoothController(context: Context) {
-
-    private var bluetooth = Bluetooth(context)
-
-    fun connect() {
-
-    }
-
-    fun disconnect() {
-
-    }
+class BluetoothController() {
 
     fun sendCommand(cmd: String) {
+
+    }
+
+    fun honk(freq: Int, duration: Int) {
+
+    }
+
+    fun fwd(speed: Int) {
+
+    }
+
+    fun rightMotor(speed: Int) {
+
+    }
+    fun leftMotor(speed: Int) {
 
     }
 }

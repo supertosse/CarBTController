@@ -15,6 +15,8 @@ import android.os.ParcelUuid
 import java.io.InputStream
 import java.io.OutputStream
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         stopButton.setOnClickListener{
             sendStop()
         }
-
     }
 
     override fun onResume() {
@@ -94,7 +95,7 @@ class MainActivity : AppCompatActivity() {
         Log.d("MainActivity", "Horn")
 
         if ((applicationContext as MyApplication).outputStream != null) {
-            (applicationContext as MyApplication).outputStream!!.write("honk 100 100".toByteArray())
+            (applicationContext as MyApplication).outputStream!!.write("honk 100 100\n".toByteArray())
         } else {
             Toast.makeText(applicationContext, "BT Not Connected", Toast.LENGTH_SHORT).show()
         }
@@ -123,27 +124,52 @@ class MainActivity : AppCompatActivity() {
         }
 
         var turnVal = turnSeekBar.progress - 10// this.turn - 10
-        var speedVal = speedSeekBar.progress * 12 // this.speed * 12
+        var speedVal = (speedSeekBar.progress + 9) * 8 // this.speed * 12
 
         if (speedVal < 90) { // Just turn
             if (abs(turnVal) >= 4) {
-                if (turnVal < 0) {
+                if (turnVal <= -4) {
                     outputStream.write(("right " + abs(turnVal)*24 + "\n").toByteArray())
-                } else if(turnVal > 0) {
+                    outputStream.write(("left 0\n").toByteArray())
+                } else if(turnVal >= 4) {
                     outputStream.write(("left " + abs(turnVal)*24 + "\n").toByteArray())
+                    outputStream.write(("right 0\n").toByteArray())
                 }
-            } else {
-                outputStream.write("stop".toByteArray())
+            } else {  // Stop if speed and turn both too low
+                outputStream.write("stop\n".toByteArray())
             }
-        } else { // Turn while driving
+        } else { // Driving fast enough
             if (turnVal == 0) {
                 outputStream.write(("fwd " + speedVal + "\n").toByteArray())
-            } else if (turnVal < 0) {
-                outputStream.write(("left " + speedVal + "\n").toByteArray())
-                outputStream.write(("right " + (speedVal + ((255-speedVal)* abs(turnVal))/10) + "\n").toByteArray())
-            } else if (turnVal > 0) {
-                outputStream.write(("right " + speedVal + "\n").toByteArray())
-                outputStream.write(("left " + (speedVal + ((255-speedVal)* abs(turnVal))/10) + "\n").toByteArray())
+            } else if (turnVal < 0) { // LEFT
+                /*
+                val delta = (((255-speedVal)* abs(turnVal))/10) / 2
+                val rightMotor = max(speedVal + delta, min(255, speedVal + 2*delta)) //(speedVal + delta)
+                val leftMotor = max(speedVal, 90)
+                */
+
+                val deltaMax = 255-speedVal
+                // val deltaMin = speedVal-90
+
+                val leftMotor = 90//  max(90, speedVal - deltaMax * abs(turnVal/5))
+                val rightMotor = min(255, speedVal + deltaMax * ((abs(turnVal/2)) /5 + 5))
+
+
+                outputStream.write(("left " + leftMotor + "\n").toByteArray())
+                outputStream.write(("right " + rightMotor + "\n").toByteArray())
+            } else if (turnVal > 0) { // RIGHT
+                val deltaMax = 255-speedVal
+                // val deltaMin = speedVal-90
+
+                val rightMotor = 90 //max(90, speedVal - deltaMax * abs(turnVal/5))
+                val leftMotor = min(255, speedVal + (deltaMax * abs(turnVal/2) /5 + 5)  )
+
+                //val delta = (((255-speedVal)* abs(turnVal))/10) / 2
+                //val leftMotor = max(speedVal + delta, min(255, speedVal + 2*delta)) //(speedVal + delta)
+                //val rightMotor = max(speedVal - delta, 90)
+
+                outputStream.write(("right " + rightMotor + "\n").toByteArray())
+                outputStream.write(("left " + leftMotor + "\n").toByteArray())
             }
         }
     }
